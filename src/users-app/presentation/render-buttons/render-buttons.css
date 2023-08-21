@@ -1,0 +1,12 @@
+button {
+    margin: 10px;
+    background-color: rgba(0, 0, 0, 0.348);
+    color: aliceblue;
+}
+
+#current-page {
+    font-size: 1.3rem;
+    color: white;
+    margin-left: 2px;
+    margin-right: 2px;
+}
