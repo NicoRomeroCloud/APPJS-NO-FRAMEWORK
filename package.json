@@ -12,5 +12,8 @@
   "devDependencies": {
     "json-server": "^0.17.3",
     "vite": "^3.2.3"
+  },
+  "dependencies": {
+    "sweetalert2": "^11.7.27"
   }
 }

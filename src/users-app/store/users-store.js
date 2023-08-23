@@ -1,5 +1,6 @@
 import { loadUsers } from "./load-users";
 import { renderButtons } from "../presentation/render-buttons/render-buttons";
+import Swal from "sweetalert2";
 
 const state = {
     currentPage: 0,
@@ -21,7 +22,11 @@ const loadNextPage = async () => {
 const loadPreviustPage = async () => {
 
     if (state.currentPage === 1) {
-        alert("No hay página 0, no insista.");
+        Swal.fire(
+            'Lo siento!',
+            'No hay página 0, o si?...',
+            'question'
+        )
         return
     }
 
