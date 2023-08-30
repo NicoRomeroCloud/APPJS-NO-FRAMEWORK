@@ -1,6 +1,7 @@
 import Swal from "sweetalert2";
 import { userModelToLocalHost } from "../mappers/user-to-localhost.mapper";
 import { User } from "../models/user";
+import { localHostUserToModel } from "../mappers/localhost-user.mapper";
 
 /**
  * 
@@ -25,14 +26,17 @@ export const saveUser = async (userLike) => {
 
     const userToSave = userModelToLocalHost(user);
 
+    let userChanged;
+
     if (user.id) {
-        throw 'Update not implemented'
-        return;
+        userChanged = await updaterUser(userToSave);
+
+    } else {
+        userChanged = await createUser(userToSave);
     }
 
-    const updateUser = await createUser(userToSave);
+    return localHostUserToModel(userChanged);
 
-    return updateUser;
 }
 
 /**
@@ -56,5 +60,29 @@ const createUser = async (user) => {
     console.log({ newUser });
 
     return newUser;
+
+}
+
+/**
+ * 
+ * @param {Like User>} user
+ */
+
+const updaterUser = async (user) => {
+
+    const url = `${import.meta.env.VITE_BASE_URL}/users/${user.id}`;
+    const res = await fetch(url, {
+        method: 'PATCH',
+        body: JSON.stringify(user),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const updateUser = await res.json();
+
+    console.log({ updateUser });
+
+    return updateUser;
 
 }

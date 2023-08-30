@@ -1,9 +1,12 @@
 import "./render-table.css";
 import userStore from "../../store/users-store";
+import { deleteUser } from "../../uses-cases/delete-user-by-id";
 import { showModal } from "../render-modal}/render-modal";
+import Swal from "sweetalert2";
+import usersStore from "../../store/users-store";
+import { User } from "../../models/user";
 
 let table;
-
 const createTable = () => {
     const table = document.createElement('table');
     const tableHeaders = document.createElement('thead');
@@ -36,6 +39,39 @@ const tableSelectListener = (event) => {
     showModal(id);
 }
 
+
+/**
+ * 
+ * @param {MouseEvent} event 
+ */
+const tableDeleteListener = async (event) => {
+    const element = event.target.closest('.delete-user');
+    if (!element) return;
+
+    const id = element.getAttribute('data-id');
+
+    try {
+        await deleteUser(id);
+        await usersStore.reloadPage();
+        document.querySelector('#current-page').innerText = usersStore.getCurrentPage();
+        renderTable();
+        Swal.fire(
+            'EXITO!',
+            `Usuario eliminado correctamente`,
+            'success'
+        )
+    } catch (error) {
+        console.log(error);
+        Swal.fire(
+            'Lo siento!',
+            'No se pudo eliminar',
+            'error'
+        )
+    }
+
+
+}
+
 /**
  * 
  * @param {HTMLDivElement} element 
@@ -53,6 +89,8 @@ export const renderTable = (element) => {
         //TODO: listeners a la table.
 
         table.addEventListener('click', tableSelectListener);
+
+        table.addEventListener('click', tableDeleteListener);
 
     }
 
